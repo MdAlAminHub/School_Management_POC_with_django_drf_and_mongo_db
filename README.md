@@ -52,6 +52,7 @@ Let's discuss about some key feature visualization :
 
 code snippet :
 
+```
 class Mark(models.Model):
     GRADE_CHOICES = (
         ('5.00', 'A+'),
@@ -102,7 +103,7 @@ class Mark(models.Model):
         ordering = ('-id',)
         verbose_name = "Mark"
         verbose_name_plural = "Marks"
-
+```
 
 3.The first dashboard summarizing results looks like :
 ![](screenshot/bar.png)  
