@@ -1,0 +1,36 @@
+version: '3.7'
+
+
+services:
+
+  web_app:
+    container_name: web_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+#      python manage.py migrate --fake token_blacklist 0008 &&
+    command: sh -c "python manage.py makemigrations &&
+      python manage.py migrate &&
+      python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - 7000:8000
+    volumes:
+      - .:/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - mongodb
+
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_vol:/data/db
+
+volumes:
+  mongodb_vol:

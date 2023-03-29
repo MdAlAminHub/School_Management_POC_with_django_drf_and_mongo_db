@@ -1,0 +1,192 @@
+<!-- Styles -->
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .content-body {
+        height: 100vh;
+        width: 100vw;
+        background-color: rgb(243, 241, 241);
+    }
+
+    .container {
+        max-width: 1080px;
+        margin: auto;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    th {
+        font-size: 20px;
+        padding: 10px;
+        color: rgb(148, 146, 146);
+    }
+
+    td {
+        padding: 10px;
+    }
+
+    .chart-content-wrapper {
+        display: flex;
+        align-items: flex-start;
+        background-color: white;
+        padding: 0 50px;
+    }
+
+    .main-chart-wrapper {
+        width: 100%;
+    }
+
+    .chart-title {
+        font-size: 20px;
+        padding: 10px;
+        color: rgb(148, 146, 146);
+        font-weight: 600;
+        text-align: center;
+        display: block;
+    }
+
+    #chartdiv {
+        padding: 10px;
+        max-width: 90%;
+        height: 210px;
+    }
+
+    .chart-wrapper {
+        max-width: 700px;
+        padding: 10px 20px;
+        margin: auto;
+    }
+
+    .select-button-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin: 10px 0;
+        padding: 10px;
+    }
+
+    select:focus {
+        outline: none;
+    }
+
+    .select-button-wrapper select {
+        width: 200px;
+        padding: 10px;
+        border: none;
+        background-color: rgb(212, 209, 209);
+        border-radius: 10px;
+    }
+</style>
+
+
+<!-- Resources -->
+<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+
+<!-- Chart code -->
+<script>
+am5.ready(function() {
+
+// Create root element
+// https://www.amcharts.com/docs/v5/getting-started/#Root_element
+var root = am5.Root.new("chartdiv");
+
+
+// Set themes
+// https://www.amcharts.com/docs/v5/concepts/themes/
+root.setThemes([
+  am5themes_Animated.new(root)
+]);
+
+
+// Create chart
+// https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/
+var chart = root.container.children.push(am5percent.PieChart.new(root, {
+  layout: root.verticalLayout
+}));
+
+
+// Create series
+// https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Series
+var series = chart.series.push(am5percent.PieSeries.new(root, {
+  valueField: "value",
+  categoryField: "category"
+}));
+
+
+var data = [
+    {% for r in result %}
+        {value: {{ r.grade_total_student }} , category: '{{ r.percentage }}%'},
+    {% endfor %}
+];
+
+// Set data
+// https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Setting_data
+series.data.setAll(data);
+
+
+// Play initial series animation
+// https://www.amcharts.com/docs/v5/concepts/animations/#Animation_of_series
+series.appear(1000, 100);
+
+}); // end am5.ready()
+</script>
+
+
+<!-- HTML -->
+<div class="content-body">
+    <div class="container">
+        <div class="chart-wrapper">
+
+            <form method="GET" id="form_id">
+                <div class="select-button-wrapper">
+                    <div>
+                        <select name="class_id" id="class_id" onchange="document.getElementById('form_id').submit()">
+                            <option value="">Select Class</option>
+                            {% for cls in class_list %}
+                                <option  {% if request.GET.class_id|stringformat:"s" == cls.id|stringformat:"s" %} selected {% endif %} value="{{ cls.id }}">{{ cls.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <select name="subject_id" id="subject_id" onchange="document.getElementById('form_id').submit()">
+                            <option value="" selected>Select Subject</option>
+                            {% for sub in subjects %}
+                                <option {% if request.GET.subject_id|stringformat:"s" == sub.id|stringformat:"s" %} selected {% endif %} value="{{ sub.id }}">{{ sub.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </form>
+
+            <div class="chart-content-wrapper">
+                <div class="table-wrapper">
+                    <table>
+                        <tr>
+                            <th>Grade</th>
+                            <th>Students</th>
+                            <th>Percentage</th>
+                        </tr>
+                        {% for d in result %}
+                            <tr>
+                                <td>{{ d.grade }}</td>
+                                <td>{{ d.grade_total_student }}</td>
+                                <td>{{ d.percentage }}%</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div class="main-chart-wrapper">
+                    <span class="chart-title">Total Student : {{ total_student }}</span>
+                    <div id="chartdiv"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

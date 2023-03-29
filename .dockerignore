@@ -1,0 +1,12 @@
+.git/
+
+__pycache__/
+
+.idea/
+*.iml
+
+db.sqlite3
+
+.venv/
+env/
+venv/
