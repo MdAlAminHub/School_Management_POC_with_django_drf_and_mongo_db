@@ -34,7 +34,7 @@ python3 manage.py migrate
 python3 manage.py runserver
 ```
 
-#### There is a File link to "http://localhost:7000/api/docs/?fbclid=IwAR1M1rLXyxHO_nSYN4kneDO6Kdf41fn0L7elpTosnRQENfd3kwY0rFzsQZ4#/" which has the swagger Collection of API's which are mainly all the API's for the project 
+#### There is a File endpoint  "http://localhost:7000/api/docs/" which has the swagger Collection of API's which are mainly all the API's for the project 
 
 look like below :
 ![](screenshot/api_docs.png)
@@ -105,8 +105,10 @@ class Mark(models.Model):
         verbose_name = "Mark"
         verbose_name_plural = "Marks"
 ```
+#### Dashboard Visualization endpoint "http://localhost:7000/dashboard/" which can be seen by anyone but can modify only by Teacher
 
 3.The first dashboard summarizing results looks like :
+
 ![](screenshot/bar.png)  
 
 4.The second dashboard summarizing results looks like :
