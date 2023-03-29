@@ -273,6 +273,10 @@ class IsTeacher(BasePermission):
         return False
 ```
 
+## The project is running with MongoBD database : 
+the database is fully configured in settings.py file , some additional packages like pymongo,djongo is  required 
+which all are listed in the requirements.py file 
+
 
 Thats all, for any quries regarding this POC you can knock me at my LinkedIn 
 https://www.linkedin.com/in/alamin66/
