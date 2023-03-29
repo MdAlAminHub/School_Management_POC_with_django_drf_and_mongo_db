@@ -1,5 +1,5 @@
 """
-School_Management_POC with Django, Django Rest Feamework and MongoDB
+## School_Management_POC with Django, Django Rest Feamework and MongoDB
 
 """
 The project is dockerized so there is two pre prerequisite requirments 
