@@ -41,13 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
-
+    #3rd party app
     'rest_framework',
     'rest_framework_simplejwt',
     # 'rest_framework_simplejwt.token_blacklist',
     'drf_spectacular',
     'drf_spectacular_sidecar',
-
+    #Local_Apps
     'account',
     'school',
 ]

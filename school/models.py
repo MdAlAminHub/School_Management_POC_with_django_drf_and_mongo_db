@@ -2,7 +2,6 @@ from django.db import models
 from django.db.models import Avg
 from account.models import User
 
-
 class Teacher(models.Model):
     user = models.OneToOneField(User, related_name='teacher', on_delete=models.CASCADE)
     address = models.TextField(max_length=255)
