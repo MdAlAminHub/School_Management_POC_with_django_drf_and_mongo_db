@@ -47,7 +47,7 @@ for example to add mark for students
 ## Let's discuss about some key feature visualization :
 
 
-1.For CRUD operations of Class,Subjects,Students,Teachers,Mark the "school" app is designed.
+1.For CRUD operations of Class,Subjects,Students,Teachers,Mark the "school" app is designed and used Django Rest Framework to create all API's.
 
 2.For the automated GPA Grading system you can see the Mark Model
 
@@ -180,3 +180,99 @@ class DashboardNoSqlView(View):
             # print('total_student: ', context["total_student"])
             return render(request, 'chartapp/pie.html', context)
 ```
+5.For the authentication system "account" app is created , 
+I have used here fully customized user model like- BaseUserManager,AbstractBaseUser from django.contrib.auth.models
+
+code snippet:
+
+```
+#  Custom User Manager
+class UserManager(BaseUserManager):
+  def create_user(self, email, name, tc, password=None, password2=None):
+      """
+      Creates and saves a User with the given email, name, tc and password.
+      """
+      if not email:
+          raise ValueError('User must have an email address')
+
+      user = self.model(
+          email=self.normalize_email(email),
+          name=name,
+          tc=tc,
+      )
+
+      user.set_password(password)
+      user.save(using=self._db)
+      return user
+
+  def create_superuser(self, email, name, tc, password=None):
+      """
+      Creates and saves a superuser with the given email, name, tc and password.
+      """
+      user = self.create_user(
+          email,
+          password=password,
+          name=name,
+          tc=tc,
+      )
+      user.is_admin = True
+      user.save(using=self._db)
+      return user
+
+#  Custom User Model
+class User(AbstractBaseUser):
+  email = models.EmailField(
+      verbose_name='Email',
+      max_length=255,
+      unique=True,
+  )
+  name = models.CharField(max_length=200)
+  tc = models.BooleanField()
+  is_active = models.BooleanField(default=True)
+  is_admin = models.BooleanField(default=False)
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now=True)
+
+  objects = UserManager()
+
+  USERNAME_FIELD = 'email'
+  REQUIRED_FIELDS = ['name', 'tc']
+
+  def __str__(self):
+      return self.email
+
+  def has_perm(self, perm, obj=None):
+      "Does the user have a specific permission?"
+      # Simplest possible answer: Yes, always
+      return self.is_admin
+
+  def has_module_perms(self, app_label):
+      "Does the user have permissions to view the app `app_label`?"
+      # Simplest possible answer: Yes, always
+      return True
+
+  @property
+  def is_staff(self):
+      "Is the user a member of staff?"
+      # Simplest possible answer: All admins are staff
+      return self.is_admin
+```
+6.For add/update to Class/Subjects/Mark only Teachers are allowed ,So I have added a custom permission class for Teacher so that only teacher can do this
+
+code snippet:
+```
+from rest_framework.permissions import BasePermission
+
+class IsTeacher(BasePermission):
+    """
+    Allows access only to authenticated users.
+    """
+    def has_permission(self, request, view):
+        if hasattr(request.user, 'teacher'):
+            return bool(request.user and request.user.is_authenticated)
+        return False
+```
+
+
+Thats all, for any quries regarding this POC you can knock me at my LinkedIn 
+https://www.linkedin.com/in/alamin66/
